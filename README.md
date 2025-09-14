@@ -1,8 +1,14 @@
 # Go School - School Management System
 
-![Go School Logo](images/company-logo.png)
+![Go School Logo](images/1.png)
 
 Go School is a comprehensive web-based school management system designed to streamline educational administration and enhance communication between students, teachers, and administrators.
+
+## 🌐 Live Demo
+
+**Website**: [https://go-school.is-best.net/?i=1](https://go-school.is-best.net/?i=1)
+
+Try the live demo with the default credentials provided below!
 
 ## 🚀 Features
 
@@ -187,7 +193,7 @@ Configure PHPMailer in the relevant files for:
 - CSS custom properties for easy theming
 
 ### Branding
-- Update logo in `images/company-logo.png`
+- Update logo in `images/1.png`
 - Modify school name in configuration files
 - Customize color scheme in CSS files
 
@@ -235,11 +241,31 @@ For support and queries:
 - Contact the development team
 - Check the documentation
 
+## 📱 Android WebView App
+
+We also have a companion Android WebView app that provides native mobile access to the Go School system:
+
+**Repository**: [Go School Android App](https://github.com/your-username/go-school-android)
+
+### Features:
+- Native Android interface
+- Offline capability
+- Push notifications
+- Optimized for mobile devices
+- Same login credentials as web version
+
+### Installation:
+1. Download the APK from the releases section
+2. Enable "Install from unknown sources" in Android settings
+3. Install the APK
+4. Launch and login with your credentials
+
 ## 🔄 Version History
 
 - **v1.0.0** - Initial release with core features
 - **v1.1.0** - Added video meeting functionality
 - **v1.2.0** - Enhanced UI/UX and mobile responsiveness
+- **v1.3.0** - Android WebView app integration
 
 ---
 
