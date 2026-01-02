@@ -423,9 +423,6 @@ if ($result->num_rows > 0) {
     </script>
 
 
-    <script type="text/javascript" src="app.js"></script>
-    <!-- <script type="text/javascript" src="timeTable.js"></script> -->
-    <script type="text/javascript" src="index.js"></script>
-</body>
+    <script type="text/javascript" src="index.js"></script>`n<script type="text/javascript" src="app.js"></script>`n</body>`n</html>
 
-</html>
+

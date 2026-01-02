@@ -1,171 +1,347 @@
-<?php
-include('../assets/config.php');
-?>
+<?php include("../assets/noSessionRedirect.php"); ?>
+<?php include("./verifyRoleRedirect.php"); ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SMS - Buses</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Panel</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        .bus-icon {
-            height: 40px;
-            width: 40px;
-            border: 1px solid grey;
-            margin-top: 15px;
-            margin-left: 10px;
+        header {
+            position: relative !important;
+        }
+        main {
+            padding: 2rem;
+        }
+        .bus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .bus-card {
+            background: var(--color-white);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2rem 3rem var(--color-light);
+            border-left: 4px solid #54cb54;
+            transition: all 0.3s ease;
+        }
+        .dark-theme .bus-card {
+            background: var(--color-dark);
+        }
+        .bus-card:hover {
+            box-shadow: none;
+        }
+        .bus-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+        }
+        .dark-theme .bus-card h3 {
+            color: var(--color-white);
+        }
+        .bus-card h4 {
+            color: var(--color-dark);
+            font-size: 1rem;
+        }
+        .dark-theme .bus-card h4 {
+            color: var(--color-white);
+        }
+        .bus-card p {
+            color: var(--color-dark) !important;
+        }
+        .dark-theme .bus-card p {
+            color: var(--color-white) !important;
+        }
+        .bus-card small {
+            color: var(--color-dark) !important;
+        }
+        .dark-theme .bus-card small {
+            color: var(--color-white) !important;
+        }
+        .bus-card .text-muted {
+            color: var(--color-dark) !important;
+        }
+        .dark-theme .bus-card .text-muted {
+            color: var(--color-white) !important;
+        }
+        .bus-card strong {
+            color: var(--color-dark) !important;
+        }
+        .dark-theme .bus-card strong {
+            color: var(--color-white) !important;
+        }
+        .bus-route-item {
+            padding: 0.8rem 1rem;
+            border-left: 3px solid var(--color-light);
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            background: var(--color-background);
+            border-radius: 0.5rem;
+            color: var(--color-dark);
+        }
+        .dark-theme .bus-route-item {
+            background: var(--color-dark-variant);
+            color: var(--color-white);
+        }
+        .bus-route-item strong {
+            color: var(--color-dark);
+        }
+        .dark-theme .bus-route-item strong {
+            color: var(--color-white);
+        }
+        .bus-route-item:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background-image: url('images/bus-icon.png');
-            background-position: center;
-            background-size: cover;
+            background: #54cb54;
+            border: 2px solid var(--color-white);
         }
-        .pending{
-            margin-left: 30%;
+        .dark-theme .bus-route-item:before {
+            border-color: var(--color-dark);
         }
-        #pen{
-            background-size: cover;
-            background-position: center;
+        .bus-route-item:last-child {
+            border-left-color: transparent;
         }
-       @media only screen and (max-width: 700px) {
-    #pen {
-        height: 200px; /* Added 'px' to the height value */
-        width: 350px;
-        margin-left: -60%;
-    }
-}
-
-        
+        .staff-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--color-background);
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--color-primary);
+            color: var(--color-dark);
+        }
+        .dark-theme .staff-info {
+            background: var(--color-dark-variant);
+            color: var(--color-white);
+        }
+        .staff-info strong {
+            color: var(--color-dark);
+        }
+        .dark-theme .staff-info strong {
+            color: var(--color-white);
+        }
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--color-primary-variant);
+        }
+        .alert {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+        .alert-info {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .alert-warning {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        .pending-container {
+            text-align: center;
+            padding: 3rem;
+        }
+        .pending-img {
+            max-width: 300px;
+        }
+        @media screen and (max-width: 768px) {
+            .bus-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">GO SCHOOL</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Logout</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
+    <header>
+        <div class="logo">
+            <img src="./images/logo.png" alt="">
+            <h2>S<span class="danger">M</span>S</h2>
         </div>
-    </nav>
+        <div class="navbar">
+            <a href="index.php">
+                <span class="material-icons-sharp">home</span>
+                <h3>Home</h3>
+            </a>
+            <a href="timetable.php">
+                <span class="material-icons-sharp">today</span>
+                <h3>Time Table</h3>
+            </a>
+            <a href="exam.php">
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>Examination</h3>
+            </a>
+            <a href="workspace.php">
+                <span class="material-icons-sharp">description</span>
+                <h3>Workspace</h3>
+            </a>
+            <a href="password.php">
+                <span class="material-icons-sharp">password</span>
+                <h3>Change Password</h3>
+            </a>
+            <a href="logout.php">
+                <span class="material-icons-sharp">logout</span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+        <div id="profile-btn" style="display: none;">
+            <span class="material-icons-sharp">person</span>
+        </div>
+        <div class="theme-toggler">
+            <span class="material-icons-sharp active">light_mode</span>
+            <span class="material-icons-sharp">dark_mode</span>
+        </div>
+    </header>
 
-    <div class="container mt-4 border-0 p-3 shadow border-0">
-        <?php
-session_start();
-
-// Check if user is logged in
-if (!isset($_SESSION['uid'])) {
-    // Redirect to login page or handle unauthorized access
-    header("Location: login.php");
-    exit();
-}
-
-$uid = $_SESSION['uid'];
-
-
-// Prepare and execute SQL query
-$query = "SELECT * FROM students WHERE id=?";
-$stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, "s", $uid);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-
-if (mysqli_num_rows($result) > 0) {
-    $row2 = mysqli_fetch_assoc($result);
-    
-    if ($row2["request"] == "") {
-        echo '<button type="button" data-uid="' . $uid . '" id="request" class="btn btn-primary" data-mdb-ripple-init>
-        <i class="fas fa-paper-plane me-2"></i> Request For Bus
-      </button>';
-
-} else if ($row2["request"] == "accepted") {
-        $sql = "SELECT * FROM buses";
-        $result = mysqli_query($conn, $sql);
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "
-                <div class='container shadow border-0' style='margin: 0; width: 100%; margin-bottom: 20px; border-left: 4px solid #54cb54 !important;'>
-                <a href='buslocation.php?bus_id={$row['bus_id']}' class='text-decoration-none text-dark'>
-                        <div class='d-flex align-items-center'>
-                            <div class='bus-icon'></div>
-                            <div class='ms-3'>
-                                <h5 style='font-size: 15px; padding: 10px;'>Bus No: {$row['bus_number']} <br>Title: {$row['bus_title']}</h5>
-                            </div>
-                        </div>
-                      </a>
-                      </div>";
+    <main>
+        <h1><i class='bx bxs-bus'></i> Bus Service</h1>
+        <div>
+            
+            <?php
+            $uid = $_SESSION['uid'];
+            
+            $query = "SELECT * FROM students WHERE id=?";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "s", $uid);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            
+            if (mysqli_num_rows($result) > 0) {
+                $student = mysqli_fetch_assoc($result);
+                
+                if ($student["request"] == "") {
+                    echo '<div class="alert alert-info">
+                            <h3>No Bus Service Requested</h3>
+                            <p>Click the button below to request bus service</p>
+                            <button type="button" data-uid="' . $uid . '" id="request" class="btn btn-primary">
+                                <i class="bx bxs-bus"></i> Request For Bus
+                            </button>
+                          </div>';
+                          
+                } else if ($student["request"] == "accepted") {
+                    $sql = "SELECT * FROM buses";
+                    $busResult = mysqli_query($conn, $sql);
+                    
+                    if ($busResult && mysqli_num_rows($busResult) > 0) {
+                        echo '<div class="bus-grid">';
+                        while ($bus = mysqli_fetch_assoc($busResult)) {
+                            echo '<div class="bus-card">
+                                        <h3><i class="bx bxs-bus"></i> ' . htmlspecialchars($bus['bus_title']) . '</h3>
+                                        <p style="margin-top: 0.5rem;"><small class="text-muted">Bus No: <strong>' . htmlspecialchars($bus['bus_number']) . '</strong></small></p>
+                                        
+                                        <h4 style="margin-top: 1.5rem; margin-bottom: 0.8rem;">Bus Route:</h4>
+                                        <div>';
+                            
+                            // Fetch bus stops
+                            $busId = $bus['bus_id'];
+                            $stopQuery = "SELECT * FROM bus_root WHERE bus_id=? ORDER BY serial ASC";
+                            $stopStmt = mysqli_prepare($conn, $stopQuery);
+                            mysqli_stmt_bind_param($stopStmt, "s", $busId);
+                            mysqli_stmt_execute($stopStmt);
+                            $stopResult = mysqli_stmt_get_result($stopStmt);
+                            
+                            if (mysqli_num_rows($stopResult) > 0) {
+                                while ($stop = mysqli_fetch_assoc($stopResult)) {
+                                    echo '<div class="bus-route-item">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <strong>' . htmlspecialchars($stop['location']) . '</strong>
+                                                <small class="text-muted">' . htmlspecialchars($stop['arrival_time']) . '</small>
+                                            </div>
+                                          </div>';
+                                }
+                            } else {
+                                echo '<p style="margin-left: 1rem;"><small class="text-muted">No route information available</small></p>';
+                            }
+                            
+                            echo '</div>';
+                            
+                            // Fetch bus staff
+                            $staffQuery = "SELECT * FROM bus_staff WHERE bus_id=?";
+                            $staffStmt = mysqli_prepare($conn, $staffQuery);
+                            mysqli_stmt_bind_param($staffStmt, "s", $busId);
+                            mysqli_stmt_execute($staffStmt);
+                            $staffResult = mysqli_stmt_get_result($staffStmt);
+                            
+                            if (mysqli_num_rows($staffResult) > 0) {
+                                echo '<h4 style="margin-top: 1.5rem; margin-bottom: 0.8rem;">Staff:</h4>';
+                                while ($staff = mysqli_fetch_assoc($staffResult)) {
+                                    $icon = $staff['role'] == 'driver' ? 'bxs-user' : 'bxs-user-detail';
+                                    echo '<div class="staff-info">
+                                            <div><i class="bx ' . $icon . '"></i> <strong>' . ucfirst($staff['role']) . ':</strong> ' . htmlspecialchars($staff['name']) . '</div>
+                                            <div><small class="text-muted">' . htmlspecialchars($staff['contact']) . '</small></div>
+                                          </div>';
+                                }
+                            }
+                            
+                            echo '      <a href="buslocation.php?bus_id=' . $busId . '" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">
+                                            <i class="bx bx-map"></i> Track Bus
+                                        </a>
+                                  </div>';
+                        }
+                        echo '</div>';
+                    } else {
+                        echo '<div class="alert alert-warning">No buses available at the moment</div>';
+                    }
+                    
+                } else {
+                    echo '<div class="pending-container">
+                            <img src="images/pending.gif" class="pending-img" alt="Pending">
+                            <h3>Request Pending</h3>
+                            <p><small class="text-muted">Your bus service request is being processed</small></p>
+                          </div>';
+                }
             }
-        } else {
-            echo "<center>No Buses found</center>";
+            
+            mysqli_close($conn);
+            ?>
+        </div>
+    </main>
+    <script src="app.js"></script>
+    <script>
+        const requestBtn = document.getElementById("request");
+        if (requestBtn) {
+            requestBtn.addEventListener("click", function(event) {
+                if (confirm("Do you really want to apply for bus service?")) {
+                    const id = event.target.getAttribute("data-uid");
+                    
+                    fetch("fetch-data/send-request.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        window.location.reload();
+                    })
+                    .catch(error => console.error("Error:", error));
+                }
+            });
         }
-    } else {
-        echo "<div class='pending'>
-         <img src='images/pending.gif' id='pen'>
-        </div>";
-    }
-} else {
-    echo "Student not found";
-}
-
-// Close the database connection
-mysqli_close($conn);
-?>
-
-    </div>
-
+    </script>
 </body>
-
-<script type="text/javascript">
-  document.getElementById("request").addEventListener("click", function(event) {
-    var result = window.confirm("Do you really want to apply for bus service?");
-    if (result) {
-        var id = event.target.getAttribute("data-uid");
-        
-        var requestData = {
-            id: id
-        };
-
-        fetch("fetch-data/send-request.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response data here
-            console.log(data);
-            window.location.reload();
-        })
-        .catch(error => {
-            // Handle any errors here
-            console.error("Error:", error);
-        });
-    }
-});
-
-</script>
-
 </html>

@@ -1,23 +1,18 @@
 
 const sideMenu = document.querySelector("aside");
 const profileBtn = document.querySelector("#profile-btn");
-const themeToggler = document.querySelector(".theme-toggler");
 const nextDay = document.getElementById('nextDay');
 const prevDay = document.getElementById('prevDay');
 
-profileBtn.onclick = function () {
-  sideMenu.classList.toggle('active');
+if (profileBtn) {
+  profileBtn.onclick = function () {
+    sideMenu.classList.toggle('active');
+  }
 }
 window.onscroll = () => {
   sideMenu.classList.remove('active');
   if (window.scrollY > 0) { document.querySelector('header').classList.add('active'); }
   else { document.querySelector('header').classList.remove('active'); }
-}
-
-themeToggler.onclick = function () {
-  document.body.classList.toggle('dark-theme');
-  themeToggler.querySelector('span:nth-child(1)').classList.toggle('active')
-  themeToggler.querySelector('span:nth-child(2)').classList.toggle('active')
 }
 
 let setData = (day) => {
@@ -69,21 +64,95 @@ let today = now.getDay(); // Will return the present day in numerical value;
 let day = today; //To prevent the today value from changing;
 
 function timeTableAll() {
-  document.getElementById('timetable').classList.toggle('active');
-  setData(today);
-  document.querySelector('.timetable div h2').innerHTML = "Today's Timetable";
+  const timetableElement = document.getElementById('timetable');
+  if (timetableElement) {
+    timetableElement.classList.toggle('active');
+    setData(today);
+    const timetableHeader = document.querySelector('.timetable div h2');
+    if (timetableHeader) {
+      timetableHeader.innerHTML = "Today's Timetable";
+    }
+  }
 }
-nextDay.onclick = function () {
-  day <= 5 ? day++ : day = 0;  // If else one liner
-  setData(day);
+
+if (nextDay) {
+  nextDay.onclick = function () {
+    day <= 5 ? day++ : day = 0;
+    setData(day);
+  }
 }
-prevDay.onclick = function () {
-  day >= 1 ? day-- : day = 6;
-  setData(day);
+
+if (prevDay) {
+  prevDay.onclick = function () {
+    day >= 1 ? day-- : day = 6;
+    setData(day);
+  }
 }
 
 //To set the data in the table on loading window.
-document.querySelector('.timetable div h2').innerHTML = "Today's Timetable"; //To prevent overwriting the heading on loading;
+const timetableHeader = document.querySelector('.timetable div h2');
+if (timetableHeader) {
+  timetableHeader.innerHTML = "Today's Timetable";
+}
+
+// Load saved theme and setup toggle
+window.addEventListener('DOMContentLoaded', function () {
+  const themeToggler = document.querySelector(".theme-toggler");
+  
+  if (themeToggler) {
+    themeToggler.onclick = function () {
+      document.body.classList.toggle('dark-theme');
+      themeToggler.querySelector('span:nth-child(1)').classList.toggle('active');
+      themeToggler.querySelector('span:nth-child(2)').classList.toggle('active');
+      
+      var theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+      
+      fetch('../assets/themeSet.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'theme=' + encodeURIComponent(theme),
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log('Theme saved:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    };
+  }
+  
+  fetch('../assets/user_theme.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'value=' + encodeURIComponent('value'),
+  })
+  .then(response => response.text())
+  .then(data => {
+    var theme = data.trim();
+    
+    if (theme === 'dark' && themeToggler) {
+      if (!document.body.classList.contains('dark-theme')) {
+        document.body.classList.add('dark-theme');
+      }
+      themeToggler.querySelector('span:nth-child(1)').classList.remove('active');
+      themeToggler.querySelector('span:nth-child(2)').classList.add('active');
+    } else if (themeToggler) {
+      if (document.body.classList.contains('dark-theme')) {
+        document.body.classList.remove('dark-theme');
+      }
+      themeToggler.querySelector('span:nth-child(1)').classList.add('active');
+      themeToggler.querySelector('span:nth-child(2)').classList.remove('active');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+});
 function myFunction() {
   // Declare variables
   var input, filter, table, tr, td, i, txtValue;
